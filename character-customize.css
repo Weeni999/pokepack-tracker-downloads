@@ -1,0 +1,14 @@
+#character-customize-overlay{position:absolute;z-index:12;left:clamp(16px,3vw,54px);top:clamp(72px,7vh,92px);bottom:clamp(16px,3vh,36px);width:min(560px,44vw);min-width:min(320px,calc(100vw - 32px));display:flex;flex-direction:column;overflow:hidden;padding:20px 22px;background:linear-gradient(145deg,rgba(4,10,7,.96),rgba(5,10,8,.91));border:1px solid rgba(126,236,82,.54);box-shadow:0 0 38px #000c,inset 0 0 28px #40893412;backdrop-filter:blur(8px);color:#d0dac6}
+#character-customize-overlay[hidden]{display:none!important}
+.avatar-spin-hint{flex:none;margin:8px 0 2px;color:#819879;font-size:8px;letter-spacing:1.1px}.menu-character-zoom #world canvas{touch-action:none;cursor:grab}.character-edit-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid #88bc5840;flex:none}
+.character-edit-heading small{color:#b58145;font-size:9px;letter-spacing:2px}
+.character-edit-heading h2{margin:5px 0;color:#a5f47b;font:700 clamp(20px,2.4vw,30px) Impact,'Arial Narrow',sans-serif;letter-spacing:2px}
+.character-edit-heading p{margin:5px 0 0;color:#9ca88d;font-size:9px}
+#character-customize-close{flex:none;padding:8px 10px;border:1px solid #a5f47b66;background:#07100b;color:#a5f47b;font-size:9px;letter-spacing:1px}
+#character-customize-overlay .customizer-mode{flex:none;flex-wrap:wrap;margin:10px 0}
+#character-customize-overlay #chicken-select-row{flex:none;color:#aab39b;font-size:10px}
+#character-customize-overlay #locker-chicken{display:block;width:100%;margin-top:5px;padding:7px;background:#0b120b;border:1px solid #a5f47b66;color:#d0dac6}
+#character-customize-overlay .customize-box{display:block;flex:1;min-height:0;margin:8px 0 0;padding:8px 10px;border:1px solid #91c65a44;overflow:auto;overscroll-behavior:contain;scrollbar-color:#389d2f #0c110b;scrollbar-width:thin}
+body.menu-character-zoom .menu-terminal{visibility:hidden;pointer-events:none}
+body.menu-character-zoom #cinematic-controls{opacity:0;pointer-events:none}
+@media(max-width:760px){#character-customize-overlay{left:10px;right:10px;top:auto;bottom:12px;height:min(52vh,450px);width:auto;min-width:0;padding:13px}.character-edit-heading h2{font-size:21px}.character-edit-heading p{font-size:8px}#character-customize-overlay .customize-box{padding:7px}.character-edit-heading{gap:6px}}

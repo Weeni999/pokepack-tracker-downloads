@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "boneMapVersion": "robot-sem-1",
+  "mixamoLibrary": "https://www.mixamo.com/#/?page=1&type=Motion%2CMotionPack",
+  "clips": [
+    {
+      "id": "robot_menu_idle",
+      "species": "robot",
+      "status": "awaiting-source",
+      "sourceFile": "assets/animations/mixamo/source/robot_menu_idle.fbx",
+      "sourceUrl": null,
+      "sourceSkeleton": "mixamorig (humanoid, Without Skin)",
+      "targetSkeleton": "ashfall-robot-sem-1",
+      "units": "cm->m (x0.01) applied once",
+      "axisConversion": "Y-up/-Z-forward FBX -> Y-up/+Z-forward, applied once",
+      "rootMotion": false,
+      "loop": true,
+      "playbackSpeed": 0.85,
+      "duration": null,
+      "legLengthRatio": null,
+      "contentHash": null,
+      "runtimeFile": "assets/animations/retargeted/robot_menu_idle.json"
+    },
+    {
+      "id": "chicken_menu_idle_ref",
+      "species": "chicken",
+      "status": "awaiting-source",
+      "sourceFile": "assets/animations/mixamo/source/chicken_menu_idle_ref.fbx",
+      "sourceUrl": null,
+      "sourceSkeleton": "mixamorig (humanoid, Without Skin)",
+      "targetSkeleton": "ashfall-chicken-sem-1",
+      "units": "cm->m (x0.01) applied once",
+      "axisConversion": "Y-up/-Z-forward FBX -> Y-up/+Z-forward, applied once",
+      "rootMotion": false,
+      "loop": true,
+      "playbackSpeed": 0.8,
+      "duration": null,
+      "legLengthRatio": null,
+      "contentHash": null,
+      "runtimeFile": "assets/animations/retargeted/chicken_menu_idle_ref.json",
+      "note": "timing reference only; Mixamo has no avian rig. Only body/leg channels are used, wings are layered procedurally."
+    }
+  ]
+}

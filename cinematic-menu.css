@@ -1,0 +1,36 @@
+body.cinematic-boot #app{visibility:hidden!important}
+body.cinematic-menu .menu-terminal,body.cinematic-menu .topbar,body.cinematic-menu .shade,body.cinematic-menu .scanlines,body.cinematic-menu .grain,body.cinematic-menu #menu-holo{display:none!important}
+#cinematic-controls{position:fixed;inset:0;z-index:20;pointer-events:none}
+#cinematic-controls[hidden],#cinematic-lighting[hidden]{display:none}
+#cinematic-controls button{position:absolute;pointer-events:auto;cursor:pointer;background:transparent;border:0;margin:0;padding:0;box-shadow:none;color:transparent}
+#cinematic-controls button:hover{background:rgba(110,255,120,.045)}
+#cinematic-controls button:focus-visible{outline:3px solid #b8ff9e;outline-offset:-5px;background:rgba(110,255,120,.12)}
+#cinematic-lighting{position:fixed;right:22px;top:24px;width:270px;max-height:85vh;overflow:auto;padding:18px;z-index:70;background:rgba(4,13,9,.96);border:1px solid #527c47;color:#b9d4a6;font:12px monospace}
+#cinematic-lighting header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;color:#b6ff8b}
+#cinematic-lighting label{display:block;margin:14px 0}#cinematic-lighting input{display:block;width:100%;accent-color:#a4ef72}
+#cinematic-lighting select,#cinematic-lighting>button{width:100%;margin:5px 0;padding:9px;background:#102014;color:#b6ff8b;border:1px solid #527c47;font:11px monospace}
+#cinematic-lighting output{display:block;margin-top:8px;line-height:1.5}
+body.cinematic-menu #cockpit-media,body.cinematic-menu #cockpit-radio-dock{display:none!important}
+body.cinematic-menu.cinematic-media-open #cockpit-media{display:block!important;z-index:60}
+body.cinematic-menu.cinematic-media-open #cockpit-radio-dock{display:flex!important;z-index:60}
+body.cinematic-menu #settings-dialog[open]{z-index:100;box-shadow:0 0 0 100vmax rgba(0,0,0,.65)}
+body.cinematic-menu #notice{z-index:110}
+/* The old terminal must not flash during the existing Yard handoff. */
+#app.menu-dissolve .menu-terminal{visibility:hidden!important}
+/* Keep the cinematic canvas fully inside short browser windows and fit the full
+   16:9 composition by widening the camera view on narrower aspect ratios. */
+body.cinematic-menu{overflow:hidden}
+body.cinematic-menu #app{width:100vw;height:100dvh;min-height:0;max-height:100dvh;overflow:hidden}
+body.cinematic-menu #world{position:absolute;inset:0;width:100%;height:100%;overflow:hidden}
+body.cinematic-menu #world canvas{width:100%!important;height:100%!important;max-width:100%;max-height:100%;object-fit:fill}
+body.cinematic-menu #cinematic-lighting{right:max(12px,env(safe-area-inset-right));top:max(12px,env(safe-area-inset-top));width:min(270px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}
+@media(max-width:700px){body.cinematic-menu #cinematic-lighting{font-size:11px;padding:12px}body.cinematic-menu #cinematic-lighting label{margin:9px 0}}
+#cinematic-lighting .dev-tabs{display:flex;gap:6px;margin:4px 0 14px;border-bottom:1px solid #527c47}
+#cinematic-lighting .dev-tabs button{flex:1;padding:8px 5px;background:#08140d;color:#8ca383;border:1px solid #527c47;border-bottom:0;font:10px monospace;letter-spacing:1px}
+#cinematic-lighting .dev-tabs button[aria-selected=true]{background:#18301b;color:#c5ff9c;box-shadow:inset 0 -2px #a5f47b}
+#cinematic-lighting [data-pane] label{display:block;margin:14px 0;color:#b9d4a6}
+#cinematic-lighting [data-pane] input[type=range]{display:block;width:100%;margin-top:8px;accent-color:#a4ef72}
+#cinematic-lighting [data-pane] output{float:right;color:#a5f47b}
+#cinematic-lighting>header{cursor:grab;touch-action:none;user-select:none}
+#cinematic-lighting.is-dragging>header{cursor:grabbing}
+#cinematic-lighting{left:22px;right:auto}

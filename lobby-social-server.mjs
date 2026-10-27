@@ -1,0 +1,21 @@
+import { randomUUID } from 'node:crypto';
+export const cleanText=(value,max=180)=>String(value??'').normalize('NFKC').replace(/<[^>]*>/g,' ').replace(/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069<>]/g,'').replace(/\b(fuck\w*|shit\w*|bitch\w*|cunt\w*)\b/gi,'****').trim().slice(0,max);
+export function createSocial({store,instances,onReport=()=>{}}){
+ const limits=new Map(),friendOffers=new Map();store.world.socialReports||=[];
+ function allow(id,key,interval,burst=1){const k=id+':'+key,now=Date.now(),s=limits.get(k)||{tokens:burst,at:now};s.tokens=Math.min(burst,s.tokens+(now-s.at)/interval);s.at=now;limits.set(k,s);if(s.tokens<1)return false;s.tokens--;return true}
+ function prefs(p){return p.social||=( {muted:[],blocked:[],friends:[]} )}
+ function blocked(a,b){return prefs(a).blocked.includes(b.id)||prefs(b).blocked.includes(a.id)}
+ async function handle(id,type,data){const p=store.getPlayer(id);if(!p)return false;const target=store.getPlayer(String(data.targetId||'')),near=target&&instances.same(id,target.id)&&AshfallLobbyConfig.distance(p.position,target.position)<8;
+  if(type==='chat_send'){if(!allow(id,'chat',1000,3))throw Error('Chat is cooling down.');const text=cleanText(data.text);if(!text)return true;for(const other of instances.realPlayers(id)){if(!blocked(p,other)&&!prefs(other).muted.includes(id)&&AshfallLobbyConfig.distance(p.position,other.position)<18)instances.sendTo(other.id,'chat_message',{id:randomUUID(),playerId:id,name:p.name,text,at:Date.now()})}return true}
+  if(type==='emote_request'){if(!allow(id,'emote',1400))return true;if(!['wave','flex','point','sit','dance'].includes(data.emote))throw Error('Unknown emote.');p.emote=data.emote;p.emoteUntil=Date.now()+5000;return true}
+  if(type==='inspect_request'){const actor=instances.records(id).find(a=>a.id===data.targetId);if(!actor||AshfallLobbyConfig.distance(p.position,actor.position)>7)throw Error('Move closer to inspect.');instances.sendTo(id,'inspect_result',{...actor,social:target?{friend:prefs(p).friends.includes(target.id),muted:prefs(p).muted.includes(target.id),blocked:prefs(p).blocked.includes(target.id)}:{}});return true}
+  if(type==='profile_name'){if(!allow(id,'name',30000))throw Error('Wait before renaming again.');const name=cleanText(data.name,24);if(name.length<2)throw Error('Use at least two characters.');if(Object.values(store.world.players).some(o=>o.id!==id&&o.name.toLowerCase()===name.toLowerCase()))throw Error('That name is taken.');await store.commit(()=>{p.name=name});return true}
+  if(type==='follow_request'){if(!near||blocked(p,target))throw Error('That player is unavailable.');instances.sendTo(id,'follow_state',{targetId:target.id});return true}
+  if(type==='friend_request'){if(!near||blocked(p,target)||!allow(id,'friend',10000))throw Error('Friend request unavailable.');const requestId=randomUUID();friendOffers.set(requestId,{from:id,to:target.id,expires:Date.now()+30000});instances.sendTo(target.id,'friend_event',{requestId,from:id,name:p.name,status:'offered'});return true}
+  if(type==='friend_respond'){const offer=friendOffers.get(data.requestId);if(!offer||offer.to!==id||offer.expires<Date.now())throw Error('Friend request expired.');friendOffers.delete(data.requestId);const from=store.getPlayer(offer.from);if(data.accept&&!blocked(p,from))await store.commit(()=>{for(const [a,b]of[[p,from],[from,p]])prefs(a).friends=[...new Set([...prefs(a).friends,b.id])]});for(const pid of[id,offer.from])instances.sendTo(pid,'friend_event',{status:data.accept?'accepted':'declined'});return true}
+  if(type==='mute_set'||type==='block_set'){if(!target||target.id===id)throw Error('Unknown player.');const key=type==='mute_set'?'muted':'blocked';await store.commit(()=>{prefs(p)[key]=prefs(p)[key].filter(x=>x!==target.id);if(data.enabled!==false)prefs(p)[key].push(target.id)});instances.sendTo(id,'social_preferences',prefs(p));return true}
+  if(type==='report_submit'){if(!target||!allow(id,'report',60000,2))throw Error('Report unavailable.');const record={id:randomUUID(),from:id,targetId:target.id,reason:cleanText(data.reason,300),at:Date.now(),status:'pending'};await store.commit(w=>{w.socialReports.push(record);w.socialReports=w.socialReports.slice(-1000)});onReport(record);instances.sendTo(id,'report_ack',{id:record.id});return true}
+  return false;
+ }
+ return {handle,blocked,allow};
+}

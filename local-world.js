@@ -1,0 +1,10 @@
+/* Single-player adapter used when the authoritative socket cannot be reached. */
+(() => {
+'use strict';
+const bots=[{id:'offline-slag',name:'Slag Mags',position:{x:5,y:0,z:-54,yaw:1.2},emote:'SMOKING'},{id:'offline-arc',name:'Uncle Arc',position:{x:-7,y:0,z:-59,yaw:-1.1},emote:'COUNTING'},{id:'offline-board',name:'Motherboard',position:{x:10,y:0,z:-65,yaw:2.3},emote:'BETTING'}];let active=false,clockOffset=0;
+function activate(){if(active)return;active=true;const indicator=document.getElementById('offline-indicator');if(indicator)indicator.hidden=false;let last=Date.now(),playerPos=null;try{last=Number(localStorage.getItem('ashfall_server_clock'))||Date.now();playerPos=JSON.parse(localStorage.getItem('ashfall_world_position')||'null')}catch{}clockOffset=last-Date.now();if(!window.AshfallLobbyPopulation&&playerPos&&window.AshfallHubScene?.robot&&!window.__entryHasSpawned){window.AshfallHubScene.robot.position.set(Number(playerPos.x)||-2.5,Number(playerPos.y)||0,Number(playerPos.z)||-10);window.AshfallHubScene.robot.rotation.y=Number(playerPos.yaw)||Math.PI;window.__entryHasSpawned=true}if(!window.AshfallLobbyPopulation){window.AshfallPresenceView?.setSnapshot(bots);window.AshfallPresenceView?.setCount(0);}document.dispatchEvent(new CustomEvent('ashfall-world-mode',{detail:{mode:'offline'}}));}
+function deactivate(){if(!active)return;active=false;const indicator=document.getElementById('offline-indicator');if(indicator)indicator.hidden=true;document.dispatchEvent(new CustomEvent('ashfall-world-mode',{detail:{mode:'online'}}))}
+function savePosition(pos){try{localStorage.setItem('ashfall_world_position',JSON.stringify(pos));localStorage.setItem('ashfall_server_clock',String(Date.now()+clockOffset))}catch{}}
+function readPosition(){try{return JSON.parse(localStorage.getItem('ashfall_world_position')||'null')}catch{return null}}
+window.AshfallLocalWorld={activate,deactivate,savePosition,readPosition,get active(){return active},get serverTime(){return Date.now()+clockOffset},bots};
+})();
